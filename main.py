@@ -49,16 +49,40 @@ def main():
         left_days = status.json()['data']['leftDays'].split('.')[0]
         user_email = status.json()['data']['email']
 
+        # if 'message' in checkin.text:
+        #     if pushp == 'on':
+        #         msg = checkin.json()['message']
+        #         requests.get('http://www.pushplus.plus/send?token=' + push_token + '&title='+msg+'&content='+user_email+' left '+left_days+' day(s).')
+        # else:
+        #     requests.get('http://www.pushplus.plus/send?token=' + push_token + '&content='+user_email+' need update cookie!!!')
+
         if 'message' in checkin.text:
             if pushp == 'on':
-                msg = checkin.json()['message']
-                requests.get('http://www.pushplus.plus/send?token=' + push_token + '&title='+msg+'&content='+user_email+' left '+left_days+' day(s).')
+                token = push_token
+                title = checkin.json()['message']
+                content = user_email + ' Left ' + left_days ' Day(s).'
+                url = 'http://www.pushplus.plus/send'
+                data = {
+                    "token":token,
+                    "title":title,
+                    "content":content
+                }
+                body=json.dumps(data).encode(encoding='utf-8')
+                headers = {'Content-Type':'application/json'}
+                requests.post(url,data=body,headers=headers)
         else:
-            requests.get('http://www.pushplus.plus/send?token=' + push_token + '&content='+user_email+' need update cookie!!!')
-
-
-def main_handler(event, context):
-  return main()
+            token = push_token
+            title = 'Checkin Failed'
+            content = user_email + 'Cookie Need Update!!!'
+            url = 'http://www.pushplus.plus/send'
+            data = {
+                "token":token,
+                "title":title,
+                "content":content
+            }
+            body=json.dumps(data).encode(encoding='utf-8')
+            headers = {'Content-Type':'application/json'}
+            requests.post(url,data=body,headers=headers)
 
 
 if __name__ == '__main__':
