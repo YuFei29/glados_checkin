@@ -60,7 +60,7 @@ def main():
             if pushp == 'on':
                 token = push_token
                 title = checkin.json()['message']
-                content = user_email + ' Left ' + left_days ' Day(s).'
+                content = user_email + ' Left ' + left_days + ' Day(s).'
                 url = 'http://www.pushplus.plus/send'
                 data = {
                     "token":token,
