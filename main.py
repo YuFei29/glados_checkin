@@ -59,7 +59,7 @@ def main():
         if 'message' in checkin.text:
             if pushp == 'on':
                 token = push_token
-                title = checkin.json()['message']
+                title = user_email + ": " + checkin.json()['message']
                 content = user_email + ' Left ' + left_days + ' Day(s).'
                 url = 'http://www.pushplus.plus/send'
                 data = {
@@ -73,8 +73,8 @@ def main():
                 requests.post(url,data=body,headers=headers)
         else:
             token = push_token
-            title = 'Checkin Failed'
-            content = user_email + 'Cookie Need Update!!!'
+            title = user_email + ': Checkin Failed'
+            content = user_email + ' Cookie Need Update!!!'
             url = 'http://www.pushplus.plus/send'
             data = {
                 "token":token,
