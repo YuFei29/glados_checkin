@@ -1,0 +1,30 @@
+name: auto-glados-checkin
+
+run-name: glados checkin now...
+
+on:
+  workflow_dispatch: 
+  push:
+  pull_request:
+  schedule:
+    - cron:  0 10 * * * 
+
+jobs:
+  checkin:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+      with:
+	python-version: '3.10' 
+	cache: 'pip'
+      
+    - run: pip install -r requirements.txt
+    - run: python main.py 
+      env: 
+        PUSHP: ${{ secrets.PUSHP }}
+        PTOKEN: ${{ secrets.PTOKEN }}
+        COOKIES: ${{ secrets.COOKIES }}
+
+    - uses: gautamkrishnar/keepalive-workflow@v1 # using the workflow with default settings
