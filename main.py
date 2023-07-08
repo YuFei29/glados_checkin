@@ -4,8 +4,7 @@ import requests, json, os
 
 
 # GLaDOS cookie
-COOKIES = os.environ["COOKIES"]
-cookies = COOKIES.split('&&')
+scookie = os.environ["SCOOKIE"]
 
 # push switch: on or off
 pushp = os.environ["PUSHP"]
@@ -24,37 +23,37 @@ def main():
         'token': 'glados.network'
     }
 
-    for cookie in cookies:
-        checkin = requests.post(
-            curl,
-            headers = {
-                'cookie': cookie,
-                'referer': referer,
-                'origin': origin,
-                'user-agent': useragent,
-                'content-type': 'application/json;charset=UTF-8'
-            },
-            data = json.dumps(payload)
-        )
-        status = requests.get(
-            surl,
-            headers = {
-                'cookie': cookie,
-                'referer': referer,
-                'origin': origin,
-                'user-agent': useragent
-            }
-        )
+    cookie = scookie
+    checkin = requests.post(
+        curl,
+        headers = {
+            'cookie': cookie,
+            'referer': referer,
+            'origin': origin,
+            'user-agent': useragent,
+            'content-type': 'application/json;charset=UTF-8'
+        },
+        data = json.dumps(payload)
+    )
+    status = requests.get(
+        surl,
+        headers = {
+            'cookie': cookie,
+            'referer': referer,
+            'origin': origin,
+            'user-agent': useragent
+        }
+    )
 
-        left_days = status.json()['data']['leftDays'].split('.')[0]
-        user_email = status.json()['data']['email']
+    left_days = status.json()['data']['leftDays'].split('.')[0]
+    user_email = status.json()['data']['email']
 
-        if 'message' in checkin.text:
-            if pushp == 'on':
-                msg = checkin.json()['message']
-                requests.get('http://www.pushplus.plus/send?token=' + push_token + '&title='+msg+'&content='+user_email+' left '+left_days+' day(s).')
-        else:
-            requests.get('http://www.pushplus.plus/send?token=' + push_token + '&content='+user_email+' need update cookie!!!')
+    if 'message' in checkin.text:
+        if pushp == 'on':
+            msg = checkin.json()['message']
+            requests.get('http://www.pushplus.plus/send?token=' + push_token + '&title='+msg+'&content='+user_email+' left '+left_days+' day(s).')
+    else:
+        requests.get('http://www.pushplus.plus/send?token=' + push_token + '&content='+user_email+' need update cookie!!!')
 
         # if 'message' in checkin.text:
         #     if pushp == 'on':
