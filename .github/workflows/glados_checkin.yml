@@ -7,7 +7,7 @@ on:
   push:
   pull_request:
   schedule:
-    - cron:  '29 10 * * *'
+    - cron:  '35 10 * * *'
 
 jobs:
   checkin:
@@ -25,6 +25,6 @@ jobs:
       env: 
         PUSHP: ${{ secrets.PUSHP }}
         PTOKEN: ${{ secrets.PTOKEN }}
-        COOKIES: ${{ secrets.COOKIES }}
+        SCOOKIE: ${{ secrets.SCOOKIE }}
 
     - uses: gautamkrishnar/keepalive-workflow@v1 # using the workflow with default settings
