@@ -49,42 +49,42 @@ def main():
         left_days = status.json()['data']['leftDays'].split('.')[0]
         user_email = status.json()['data']['email']
 
-        # if 'message' in checkin.text:
-        #     if pushp == 'on':
-        #         msg = checkin.json()['message']
-        #         requests.get('http://www.pushplus.plus/send?token=' + push_token + '&title='+msg+'&content='+user_email+' left '+left_days+' day(s).')
-        # else:
-        #     requests.get('http://www.pushplus.plus/send?token=' + push_token + '&content='+user_email+' need update cookie!!!')
-
         if 'message' in checkin.text:
             if pushp == 'on':
-                token = push_token
-                title = user_email + ": " + checkin.json()['message']
-                content = user_email + ' Left ' + left_days + ' Day(s).'
-                url = 'http://www.pushplus.plus/send'
-                data = {
-                    "token":token,
-                    "title":title,
-                    "content":content,
-                    "channel":"mail"
-                }
-                body=json.dumps(data).encode(encoding='utf-8')
-                headers = {'Content-Type':'application/json'}
-                requests.post(url,data=body,headers=headers)
+                msg = checkin.json()['message']
+                requests.get('http://www.pushplus.plus/send?token=' + push_token + '&title='+msg+'&content='+user_email+' left '+left_days+' day(s).')
         else:
-            token = push_token
-            title = user_email + ': Checkin Failed'
-            content = user_email + ' Cookie Need Update!!!'
-            url = 'http://www.pushplus.plus/send'
-            data = {
-                "token":token,
-                "title":title,
-                "content":content,
-                "channel":"mail"
-            }
-            body=json.dumps(data).encode(encoding='utf-8')
-            headers = {'Content-Type':'application/json'}
-            requests.post(url,data=body,headers=headers)
+            requests.get('http://www.pushplus.plus/send?token=' + push_token + '&content='+user_email+' need update cookie!!!')
+
+        # if 'message' in checkin.text:
+        #     if pushp == 'on':
+        #         token = push_token
+        #         title = user_email + ": " + checkin.json()['message']
+        #         content = user_email + ' Left ' + left_days + ' Day(s).'
+        #         url = 'http://www.pushplus.plus/send'
+        #         data = {
+        #             "token":token,
+        #             "title":title,
+        #             "content":content,
+        #             "channel":"mail"
+        #         }
+        #         body=json.dumps(data).encode(encoding='utf-8')
+        #         headers = {'Content-Type':'application/json'}
+        #         requests.post(url,data=body,headers=headers)
+        # else:
+        #     token = push_token
+        #     title = user_email + ': Checkin Failed'
+        #     content = user_email + ' Cookie Need Update!!!'
+        #     url = 'http://www.pushplus.plus/send'
+        #     data = {
+        #         "token":token,
+        #         "title":title,
+        #         "content":content,
+        #         "channel":"mail"
+        #     }
+        #     body=json.dumps(data).encode(encoding='utf-8')
+        #     headers = {'Content-Type':'application/json'}
+        #     requests.post(url,data=body,headers=headers)
 
 
 if __name__ == '__main__':

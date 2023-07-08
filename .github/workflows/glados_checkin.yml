@@ -7,7 +7,7 @@ on:
   push:
   pull_request:
   schedule:
-    - cron:  '6 10 * * *'
+    - cron:  '29 10 * * *'
 
 jobs:
   checkin:
