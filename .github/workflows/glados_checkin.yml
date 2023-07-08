@@ -26,5 +26,6 @@ jobs:
         PUSHP: ${{ secrets.PUSHP }}
         PTOKEN: ${{ secrets.PTOKEN }}
         SCOOKIE: ${{ secrets.SCOOKIE }}
+        ZCOOKIE: ${{ secrets.ZCOOKIE }}
 
     - uses: gautamkrishnar/keepalive-workflow@v1 # using the workflow with default settings

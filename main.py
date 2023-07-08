@@ -5,6 +5,7 @@ import requests, json, os
 
 # GLaDOS cookie
 scookie = os.environ["SCOOKIE"]
+zcookie = os.environ["ZCOOKIE"]
 
 # push switch: on or off
 pushp = os.environ["PUSHP"]
@@ -13,7 +14,8 @@ pushp = os.environ["PUSHP"]
 push_token = os.environ["PTOKEN"]
 
 
-def main():    
+def check(cookie):    
+    cookie = cookie
     curl = "https://glados.rocks/api/user/checkin"
     surl = "https://glados.rocks/api/user/status"
     referer = 'https://glados.rocks/console/checkin'
@@ -23,7 +25,6 @@ def main():
         'token': 'glados.network'
     }
 
-    cookie = scookie
     checkin = requests.post(
         curl,
         headers = {
@@ -58,4 +59,5 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    check(scookie)
+    check(zcookie)
