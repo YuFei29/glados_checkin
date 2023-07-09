@@ -4,8 +4,7 @@ import requests, json, os
 
 
 # GLaDOS cookie
-COOKIES = os.environ["COOKIES"]
-cookies = COOKIES.split('&&')
+scookie = os.environ["SCOOKIE"]
 
 # push switch: on or off
 pushp = os.environ["PUSHP"]
@@ -15,6 +14,7 @@ push_token = os.environ["PTOKEN"]
 
 
 def main():    
+    cookie = scookie
     curl = "https://glados.rocks/api/user/checkin"
     surl = "https://glados.rocks/api/user/status"
     referer = 'https://glados.rocks/console/checkin'
@@ -24,67 +24,37 @@ def main():
         'token': 'glados.network'
     }
 
-    for cookie in cookies:
-        checkin = requests.post(
-            curl,
-            headers = {
-                'cookie': cookie,
-                'referer': referer,
-                'origin': origin,
-                'user-agent': useragent,
-                'content-type': 'application/json;charset=UTF-8'
-            },
-            data = json.dumps(payload)
-        )
-        status = requests.get(
-            surl,
-            headers = {
-                'cookie': cookie,
-                'referer': referer,
-                'origin': origin,
-                'user-agent': useragent
-            }
-        )
+    checkin = requests.post(
+        curl,
+        headers = {
+            'cookie': cookie,
+            'referer': referer,
+            'origin': origin,
+            'user-agent': useragent,
+            'content-type': 'application/json;charset=UTF-8'
+        },
+        data = json.dumps(payload)
+    )
+    status = requests.get(
+        surl,
+        headers = {
+            'cookie': cookie,
+            'referer': referer,
+            'origin': origin,
+            'user-agent': useragent
+        }
+    )
 
-        left_days = status.json()['data']['leftDays'].split('.')[0]
-        user_email = status.json()['data']['email']
+    left_days = status.json()['data']['leftDays'].split('.')[0]
+    user_email = status.json()['data']['email']
 
-        if 'message' in checkin.text:
-            if pushp == 'on':
-                msg = checkin.json()['message']
-                requests.get('http://www.pushplus.plus/send?token=' + push_token + '&title='+msg+'&content='+user_email+' left '+left_days+' day(s).')
-        else:
-            requests.get('http://www.pushplus.plus/send?token=' + push_token + '&content='+user_email+' need update cookie!!!')
-
-        # if 'message' in checkin.text:
-        #     if pushp == 'on':
-        #         token = push_token
-        #         title = user_email + ": " + checkin.json()['message']
-        #         content = user_email + ' Left ' + left_days + ' Day(s).'
-        #         url = 'http://www.pushplus.plus/send'
-        #         data = {
-        #             "token":token,
-        #             "title":title,
-        #             "content":content,
-        #             "channel":"mail"
-        #         }
-        #         body=json.dumps(data).encode(encoding='utf-8')
-        #         headers = {'Content-Type':'application/json'}
-        #         requests.post(url,data=body,headers=headers)
-        # else:
-        #     token = push_token
-        #     title = user_email + ': Checkin Failed'
-        #     content = user_email + ' Cookie Need Update!!!'
-        #     url = 'http://www.pushplus.plus/send'
-        #     data = {
-        #         "token":token,
-        #         "title":title,
-        #         "content":content,
-        #         "channel":"mail"
-        #     }
-        #     body=json.dumps(data).encode(encoding='utf-8')
-        #     headers = {'Content-Type':'application/json'}
-        #     requests.post(url,data=body,headers=headers)
+    if 'message' in checkin.text:
+        if pushp == 'on':
+            msg = checkin.json()['message']
+            requests.get('http://www.pushplus.plus/send?token=' + push_token + '&title='+msg+'&content='+user_email+' Left '+left_days+' Day(s).')
+    else:
+        requests.get('http://www.pushplus.plus/send?token=' + push_token + '&title=Checkin Failed!' + '&content='+user_email+' Need Update Cookie!!!')
+        sys.exit('checkin failed')
 
 
 if __name__ == '__main__':
